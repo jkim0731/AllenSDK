@@ -12,7 +12,7 @@ from allensdk.brain_observatory.behavior.behavior_project_cache.tables \
     .sessions_table import \
     SessionsTable
 from allensdk.brain_observatory.behavior.behavior_project_cache.project_apis.data_io import (  # noqa: E501
-    BehaviorProjectLimsApi, BehaviorProjectCloudApi)
+    BehaviorProjectLimsApi)
 from allensdk.api.warehouse_cache.caching_utilities import \
     one_file_call_caching
 from allensdk.brain_observatory.behavior.behavior_project_cache.tables \
@@ -67,8 +67,7 @@ class VisualBehaviorOphysProjectCache(ProjectCacheBase):
 
     def __init__(
             self,
-            fetch_api: Optional[Union[BehaviorProjectLimsApi,
-                                      BehaviorProjectCloudApi]] = None,
+            fetch_api: Optional[BehaviorProjectLimsApi] = None,
             fetch_tries: int = 2,
             manifest: Optional[Union[str, Path]] = None,
             version: Optional[str] = None,
@@ -113,15 +112,10 @@ class VisualBehaviorOphysProjectCache(ProjectCacheBase):
         else:
             manifest_ = None
 
-        if not isinstance(self.fetch_api, BehaviorProjectCloudApi):
-            if cache:
-                self.cache = VBOLimsCache(manifest=manifest_,
-                                          version=version,
-                                          cache=cache)
-
-    @classmethod
-    def cloud_api_class(cls):
-        return BehaviorProjectCloudApi
+        if cache:
+            self.cache = VBOLimsCache(manifest=manifest_,
+                                        version=version,
+                                        cache=cache)
 
     @classmethod
     def lims_api_class(cls):
@@ -151,8 +145,6 @@ class VisualBehaviorOphysProjectCache(ProjectCacheBase):
             Whether to include behavior data
         :rtype: pd.DataFrame
         """
-        if isinstance(self.fetch_api, BehaviorProjectCloudApi):
-            return self.fetch_api.get_ophys_session_table()
         if self.cache is not None:
             path = self.cache.get_cache_path(None,
                                              self.cache.OPHYS_SESSIONS_KEY)
@@ -203,8 +195,6 @@ class VisualBehaviorOphysProjectCache(ProjectCacheBase):
                             (default=True)
         :rtype: pd.DataFrame
         """
-        if isinstance(self.fetch_api, BehaviorProjectCloudApi):
-            return self.fetch_api.get_ophys_experiment_table()
         if self.cache is not None:
             path = self.cache.get_cache_path(None,
                                              self.cache.OPHYS_EXPERIMENTS_KEY)
@@ -233,8 +223,6 @@ class VisualBehaviorOphysProjectCache(ProjectCacheBase):
         Return summary table of all cells in this project cache
         :rtype: pd.DataFrame
         """
-        if isinstance(self.fetch_api, BehaviorProjectCloudApi):
-            return self.fetch_api.get_ophys_cells_table()
         if self.cache is not None:
             path = self.cache.get_cache_path(None,
                                              self.cache.OPHyS_CELLS_KEY)
@@ -265,8 +253,6 @@ class VisualBehaviorOphysProjectCache(ProjectCacheBase):
         :type suppress: list of str
         :rtype: pd.DataFrame
         """
-        if isinstance(self.fetch_api, BehaviorProjectCloudApi):
-            return self.fetch_api.get_behavior_session_table()
         if self.cache is not None:
             path = self.cache.get_cache_path(None,
                                              self.cache.BEHAVIOR_SESSIONS_KEY)

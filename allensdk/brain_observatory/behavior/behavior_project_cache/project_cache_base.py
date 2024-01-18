@@ -2,8 +2,8 @@ from typing import Optional, Union, List
 from pathlib import Path
 import logging
 
-from allensdk.brain_observatory.behavior.behavior_project_cache.\
-    project_apis.data_io import ProjectCloudApiBase
+# from allensdk.brain_observatory.behavior.behavior_project_cache.\
+#     project_apis.data_io import ProjectCloudApiBase
 from allensdk.core.authentication import DbCredentials
 from allensdk.brain_observatory.behavior.behavior_project_cache.\
     project_apis.data_io import BehaviorProjectLimsApi
@@ -16,7 +16,7 @@ class ProjectCacheBase(object):
 
     def __init__(
             self,
-            fetch_api: Union[ProjectCloudApiBase, BehaviorProjectLimsApi],
+            fetch_api: BehaviorProjectLimsApi,
             fetch_tries: int = 2,
             ):
         """
@@ -46,40 +46,6 @@ class ProjectCacheBase(object):
                                       "does not have an accessible manifest "
                                       "property")
         return self.cache.manifest
-
-    @classmethod
-    def from_s3_cache(cls, cache_dir: Union[str, Path]
-                      ) -> "ProjectCacheBase":
-        """instantiates this object with a connection to an s3 bucket and/or
-        a local cache related to that bucket.
-
-        Parameters
-        ----------
-        cache_dir: str or pathlib.Path
-            Path to the directory where data will be stored on the local system
-
-        bucket_name: str
-            for example, if bucket URI is 's3://mybucket' this value should be
-            'mybucket'
-
-        project_name: str
-            the name of the project this cache is supposed to access. This
-            project name is the first part of the prefix of the release data
-            objects. I.e. s3://<bucket_name>/<project_name>/<object tree>
-
-        Returns
-        -------
-        ProjectCacheBase instance
-
-        """
-
-        fetch_api = cls.cloud_api_class().from_s3_cache(
-            cache_dir,
-            bucket_name=cls.BUCKET_NAME,
-            project_name=cls.PROJECT_NAME,
-            ui_class_name=cls.__name__)
-
-        return cls(fetch_api=fetch_api)
 
     @classmethod
     def from_local_cache(
