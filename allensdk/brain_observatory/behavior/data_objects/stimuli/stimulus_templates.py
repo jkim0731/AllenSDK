@@ -78,7 +78,7 @@ class StimulusImageFactory:
         """After warping, some pixels are not visible on the screen.
         This sets those pixels to nan to make downstream analysis easier."""
         mask = self._monitor.get_mask()
-        arr = arr.astype(np.float)
+        arr = arr.astype(float)
         arr *= mask
         arr[arr == 0] = np.nan
         return arr

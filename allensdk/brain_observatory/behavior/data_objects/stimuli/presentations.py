@@ -45,7 +45,7 @@ class Presentations(DataObject, StimulusFileReadableInterface,
         if sort_columns:
             presentations = presentations[sorted(presentations.columns)]
         presentations = presentations.reset_index(drop=True)
-        presentations.index = pd.Int64Index(
+        presentations.index = pd.Index(
             range(presentations.shape[0]), name='stimulus_presentations_id')
         super().__init__(name='presentations', value=presentations)
 
@@ -220,7 +220,7 @@ class Presentations(DataObject, StimulusFileReadableInterface,
         if limit_to_images is not None:
             stim_pres_df = \
                 stim_pres_df[stim_pres_df['image_name'].isin(limit_to_images)]
-            stim_pres_df.index = pd.Int64Index(
+            stim_pres_df.index = pd.Index(
                 range(stim_pres_df.shape[0]), name=stim_pres_df.index.name)
         stim_pres_df = cls._postprocess(
             presentations=stim_pres_df,

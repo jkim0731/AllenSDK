@@ -756,7 +756,7 @@ def warp_stimulus_coords(vertices,
     distance = float(distance)
     mon_res_x, mon_res_y = float(mon_res[0]), float(mon_res[1])
 
-    vertices = vertices.astype(np.float)
+    vertices = vertices.astype(float)
 
     # from pixels (-1920/2 -> 1920/2) to stimulus space (-0.5->0.5)
     vertices[:, 0] = vertices[:, 0] / mon_res_x
